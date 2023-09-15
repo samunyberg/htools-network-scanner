@@ -1,23 +1,20 @@
 #!/usr/bin/env python
 
-import optparse
+import argparse
 import scapy.all as scapy
 from scapy.layers.l2 import ARP, Ether
 
 
-def get_options():
-    parser = optparse.OptionParser()
-    parser.add_option(
-        "-t", "--target", dest="target", help="Target network IP address range."
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-t",
+        "--target",
+        required=True,
+        dest="target",
+        help="Target network IP address / address range.",
     )
-    (options, arguments) = parser.parse_args()
-
-    if not options.target:
-        parser.error(
-            "[-] Please specify a target IP address range. Use --help for more info."
-        )
-
-    return options
+    return parser.parse_args()
 
 
 def get_connected_clients(ip):
@@ -44,6 +41,6 @@ def print_output(clients):
         print(client["ip"] + "\t\t" + client["mac"])
 
 
-options = get_options()
-connected_clients = get_connected_clients(options.target)
+args = get_args()
+connected_clients = get_connected_clients(args.target)
 print_output(connected_clients)
